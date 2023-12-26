@@ -14,7 +14,10 @@ namespace TestingDotNetCore.ConsoleApp.AdoDotNetExamples
         public void Run()
         {
             //Read();
-            Edit(1);
+            //Edit(1);
+            //Create("World", "CKC", "about love xD");
+            //Update(1,"update title", "update author", "update content");
+            Delete(3);
         }
 
         private void Read()
@@ -106,6 +109,125 @@ namespace TestingDotNetCore.ConsoleApp.AdoDotNetExamples
                 Console.WriteLine("-------------");
 
             
+        }
+
+        private void Create(string title, string author, string content) 
+        {
+
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder()
+            {
+                DataSource = "CKC\\SQLEXPRESS",
+                InitialCatalog = "CKCDotNetCore",
+                UserID = "sa",
+                Password = "asd123!@#"
+            };
+            SqlConnection connection = new SqlConnection(builder.ConnectionString);
+            Console.WriteLine("Connnection opening...");
+            connection.Open();
+            Console.WriteLine("Connection Opend");
+
+
+            string query = @"INSERT INTO [dbo].[Tbl_Blog]
+      ([Blog_Title]
+      ,[Blog_Author]
+      ,[Blog_Content])
+  VALUES
+        (@Blog_Title,
+         @Blog_Author,
+         @Blog_Content)";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Blog_Title", title);
+            command.Parameters.AddWithValue("@Blog_Author", author);
+            command.Parameters.AddWithValue("@Blog_Content", content);
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            int result = command.ExecuteNonQuery();
+
+            Console.WriteLine("Connnection close...");
+            connection.Close();
+            Console.WriteLine("Connection Close");
+
+            string message = result > 0 ? "Saving Successful." : "Saving Failed";
+           
+            Console.WriteLine(message);
+
+
+        }
+        private void Update(int id, string title, string author, string content)
+        {
+
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder()
+            {
+                DataSource = "CKC\\SQLEXPRESS",
+                InitialCatalog = "CKCDotNetCore",
+                UserID = "sa",
+                Password = "asd123!@#"
+            };
+            SqlConnection connection = new SqlConnection(builder.ConnectionString);
+            Console.WriteLine("Connnection opening...");
+            connection.Open();
+            Console.WriteLine("Connection Opend");
+
+
+            string query = @"UPDATE [dbo].[Tbl_Blog]
+   SET [Blog_Title] = @Blog_Title
+      ,[Blog_Author] = @Blog_Author
+      ,[Blog_Content] = @Blog_Content
+	WHERE Blog_Id = @Blog_Id";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Blog_Id", id);
+            command.Parameters.AddWithValue("@Blog_Title", title);
+            command.Parameters.AddWithValue("@Blog_Author", author);
+            command.Parameters.AddWithValue("@Blog_Content", content);
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            int result = command.ExecuteNonQuery();
+
+            Console.WriteLine("Connnection close...");
+            connection.Close();
+            Console.WriteLine("Connection Close");
+
+            string message = result > 0 ? "Updating Successful." : "Updating Failed";
+
+            Console.WriteLine(message);
+
+
+        }
+
+        private void Delete(int id)
+        {
+
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder()
+            {
+                DataSource = "CKC\\SQLEXPRESS",
+                InitialCatalog = "CKCDotNetCore",
+                UserID = "sa",
+                Password = "asd123!@#"
+            };
+            SqlConnection connection = new SqlConnection(builder.ConnectionString);
+            Console.WriteLine("Connnection opening...");
+            connection.Open();
+            Console.WriteLine("Connection Opend");
+
+
+            string query = @"DELETE FROM [dbo].[Tbl_Blog]
+      WHERE Blog_Id = @Blog_Id";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Blog_id", id);
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            int result = command.ExecuteNonQuery();
+
+            Console.WriteLine("Connnection close...");
+            connection.Close();
+            Console.WriteLine("Connection Close");
+
+            string message = result > 0 ? "Deleting Successful." : "Deleting Failed";
+
+            Console.WriteLine(message);
+
+
+
         }
     }
 
